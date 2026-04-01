@@ -1,20 +1,12 @@
-# Current Feature: Dashboard UI Phase 1
-
-Spec: [dashboard-phase-1-spec.md](./features/dashboard-phase-1-spec.md)
+# Current Feature
 
 ## Status
 
-In Progress
+Not Started
 
 ## Goals
 
-- ShadCN UI initialization and components
-- ShadCN component installation
-- Dashboard route at /dashboard
-- Main dashboard layout and any global styles
-- Dark mode by default
-- Top bar with search and new item button (display only)
-- Placeholder for sidebar and main area. Just add an h2 with "Sidebar" and "Main" for now.
+<!-- Define goals here -->
 
 ## Notes
 
@@ -22,3 +14,4 @@ In Progress
 
 ## History
 
+- Dashboard UI Phase 1: Completed
