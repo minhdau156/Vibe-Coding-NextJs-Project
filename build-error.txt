@@ -1,0 +1,47 @@
+
+> next-app@0.1.0 build
+> next build
+
+▲ Next.js 16.2.2 (Turbopack)
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./src/components/layout/app-sidebar.tsx:37:1
+Module not found: Can't resolve '@/components/ui/dropdown-menu'
+  [90m35 |[0m } [36mfrom[0m [32m"@/components/ui/sidebar"[0m
+  [90m36 |[0m [36mimport[0m { [33mAvatar[0m, [33mAvatarFallback[0m, [33mAvatarImage[0m } [36mfrom[0m [32m"@/components/ui/avatar"[0m
+[31m[1m>[0m [90m37 |[0m [36mimport[0m {
+  [90m   |[0m [31m[1m^^^^^^^[0m
+[31m[1m>[0m [90m38 |[0m   [33mDropdownMenu[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m39 |[0m   [33mDropdownMenuContent[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m40 |[0m   [33mDropdownMenuItem[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m41 |[0m   [33mDropdownMenuLabel[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m42 |[0m   [33mDropdownMenuSeparator[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m43 |[0m   [33mDropdownMenuTrigger[0m,
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^[0m
+[31m[1m>[0m [90m44 |[0m } [36mfrom[0m [32m"@/components/ui/dropdown-menu"[0m
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m45 |[0m
+  [90m46 |[0m [36mconst[0m iconMap: [33mRecord[0m<string, [33mReact[0m.[33mElementType[0m> = {
+  [90m47 |[0m   [33mCode[0m,
+
+Import map: aliased to relative './src/components/ui/dropdown-menu' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./src/components/layout/app-sidebar.tsx
+    ./src/app/dashboard/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./src/components/layout/app-sidebar.tsx:37:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
