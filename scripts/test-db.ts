@@ -2,17 +2,59 @@ import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 
 async function testDatabaseConnection() {
-  console.log("Testing database connection...");
+  console.log("Testing database connection and fetching demo data...\n");
   try {
-    // Attempt a simple query
-    const userCount = await prisma.user.count();
-    console.log(`Connection successful! Current number of users: ${userCount}`);
+    // 1. Users
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, email: true }
+    });
+    console.log("--- USERS ---");
+    console.table(users);
     
-    // Also, fetch the item types we seeded
-    const itemTypes = await prisma.itemType.findMany();
-    console.log(`Found ${itemTypes.length} system item types.`);
+    // 2. System Item Types
+    const itemTypes = await prisma.itemType.findMany({
+      where: { isSystem: true },
+      select: { name: true, icon: true, color: true }
+    });
+    console.log("\n--- SYSTEM ITEM TYPES ---");
+    console.table(itemTypes);
+
+    // 3. Collections & Items
+    const collections = await prisma.collection.findMany({
+      include: {
+        _count: {
+          select: { items: true }
+        }
+      }
+    });
+
+    console.log("\n--- COLLECTIONS ---");
+    const collectionData = collections.map(c => ({
+      Name: c.name,
+      Description: c.description,
+      "Item Count": c._count.items
+    }));
+    console.table(collectionData);
+
+    // 4. Items breakdown
+    const items = await prisma.item.findMany({
+      include: {
+        itemType: true
+      }
+    });
     
-    console.log("Database connection test passed! 🎉");
+    console.log("\n--- RECENT ITEMS PREVIEW ---");
+    const recentItems = items.slice(0, 5).map(item => ({
+      Title: item.title,
+      Type: item.itemType.name,
+      ContentType: item.contentType,
+      Language: item.language || 'N/A'
+    }));
+    console.table(recentItems);
+
+    console.log(`\nFound a total of ${users.length} users, ${itemTypes.length} system types, ${collections.length} collections, and ${items.length} items.`);
+    console.log("\nDatabase connection and data verification passed! 🎉");
+    
     await prisma.$disconnect();
     process.exit(0);
   } catch (error) {
