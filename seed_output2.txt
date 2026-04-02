@@ -1,0 +1,14 @@
+Seeding system item types...
+Error: No database host or connection string was set, and key parameters have default values (host: localhost, user: nguye, db: nguye, password: null). Is an environment variable missing? Alternatively, if you intended to connect with these parameters, please set the host to 'localhost' explicitly.
+    at Un.connect (D:\Coding With AI\next-app\node_modules\@neondatabase\serverless\index.js:1318:50)
+    at Dn.newClient (D:\Coding With AI\next-app\node_modules\@neondatabase\serverless\index.js:1117:85)
+    at Dn.connect (D:\Coding With AI\next-app\node_modules\@neondatabase\serverless\index.js:1114:1)
+    at Dn.query (D:\Coding With AI\next-app\node_modules\@neondatabase\serverless\index.js:1138:1)
+    at Dn.query (D:\Coding With AI\next-app\node_modules\@neondatabase\serverless\index.js:1354:96)
+    at PrismaNeonAdapter.performIO (D:\Coding With AI\next-app\node_modules\@prisma\adapter-neon\dist\index.js:554:40)
+    at PrismaNeonAdapter.queryRaw (D:\Coding With AI\next-app\node_modules\@prisma\adapter-neon\dist\index.js:515:41)
+    at callback (D:\Coding With AI\next-app\node_modules\@prisma\client-engine-runtime\src\interpreter\query-interpreter.ts:188:16)
+    at withQuerySpanAndEvent (D:\Coding With AI\next-app\node_modules\@prisma\client-engine-runtime\src\tracing.ts:80:12)
+    at #withQuerySpanAndEvent (D:\Coding With AI\next-app\node_modules\@prisma\client-engine-runtime\src\interpreter\query-interpreter.ts:373:12) {
+  clientVersion: '7.6.0'
+}
