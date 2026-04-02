@@ -8,7 +8,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { 
   mockItems, 
-  mockCollections, 
   mockItemTypeCounts, 
   mockItemTypes 
 } from '@/lib/mock-data';
@@ -19,19 +18,28 @@ import {
   Library,
   Pin,
   Clock,
+  Code, 
+  Sparkles, 
+  Terminal, 
+  StickyNote, 
+  File, 
+  Image as ImageIcon, 
+  Link as LinkIcon
 } from 'lucide-react';
 import Link from 'next/link';
+import { getRecentCollections, getCollectionStats } from '@/lib/db/collections';
 
-// Stats logic
+const IconMap: Record<string, any> = {
+  Code, Sparkles, Terminal, StickyNote, File, Image: ImageIcon, Link: LinkIcon
+};
+
+// Item stats logic from mock (since we are not replacing items yet)
 const totalItems = Object.values(mockItemTypeCounts).reduce((a, b) => a + b, 0);
-const totalCollections = mockCollections.length;
 const favoriteItemsCount = mockItems.filter(i => i.isFavorite).length;
-const favoriteCollectionsCount = mockCollections.filter(c => c.isFavorite).length;
 
-// Items logic
+// Items logic from mock
 const pinnedItems = mockItems.filter(i => i.isPinned);
 const recentItems = [...mockItems].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()).slice(0, 10);
-const recentCollections = [...mockCollections].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()).slice(0, 5);
 
 function StatCard({ title, value, icon: Icon, description }: { title: string, value: string | number, icon: any, description: string }) {
   return (
@@ -52,7 +60,10 @@ function StatCard({ title, value, icon: Icon, description }: { title: string, va
   );
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const collectionStats = await getCollectionStats();
+  const recentCollections = await getRecentCollections(6);
+
   return (
     <div className="flex flex-col gap-6">
       {/* Stats Cards */}
@@ -65,7 +76,7 @@ export default function DashboardPage() {
         />
         <StatCard 
           title="Collections" 
-          value={totalCollections} 
+          value={collectionStats.total} 
           icon={Library} 
           description="Organizing your items"
         />
@@ -77,7 +88,7 @@ export default function DashboardPage() {
         />
         <StatCard 
           title="Favorite Collections" 
-          value={favoriteCollectionsCount} 
+          value={collectionStats.favorites} 
           icon={FolderHeart} 
           description="Quickly accessible collections"
         />
@@ -164,12 +175,25 @@ export default function DashboardPage() {
               <div className="flex flex-col gap-4">
                 {recentCollections.map(collection => (
                   <Link href={`/collections/${collection.id}`} key={collection.id}>
-                    <div className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50 transition-colors">
+                    <div 
+                      className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted/50 transition-colors"
+                      style={{ borderLeftColor: collection.dominantColor, borderLeftWidth: '4px' }}
+                    >
                       <div className="flex flex-col overflow-hidden pr-4 gap-1">
                         <span className="font-medium truncate text-sm">{collection.name}</span>
-                        <span className="text-xs text-muted-foreground truncate">{collection.itemCount} items</span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-xs text-muted-foreground truncate">{collection.itemCount} items</span>
+                          {collection.itemTypes.length > 0 && (
+                            <div className="flex items-center gap-1 opacity-70 border-l pl-2 border-border">
+                              {collection.itemTypes.map((t, i) => {
+                                const TypeIcon = IconMap[t.icon] || FileBox;
+                                return <TypeIcon key={i} className="h-3 w-3" style={{ color: t.color }} />;
+                              })}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <Badge variant="outline">{collection.updatedAt.toLocaleDateString()}</Badge>
+                      <Badge variant="outline">{new Date(collection.updatedAt).toLocaleDateString()}</Badge>
                     </div>
                   </Link>
                 ))}
