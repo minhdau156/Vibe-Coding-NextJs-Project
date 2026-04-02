@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { 
   Card, 
   CardContent, 
@@ -6,11 +7,7 @@ import {
   CardTitle 
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  mockItems, 
-  mockItemTypeCounts, 
-  mockItemTypes 
-} from '@/lib/mock-data';
+import { getPinnedItems, getRecentItems, getItemStats } from '@/lib/db/items';
 import { 
   FileBox, 
   FolderHeart, 
@@ -32,15 +29,6 @@ import { getRecentCollections, getCollectionStats } from '@/lib/db/collections';
 const IconMap: Record<string, any> = {
   Code, Sparkles, Terminal, StickyNote, File, Image: ImageIcon, Link: LinkIcon
 };
-
-// Item stats logic from mock (since we are not replacing items yet)
-const totalItems = Object.values(mockItemTypeCounts).reduce((a, b) => a + b, 0);
-const favoriteItemsCount = mockItems.filter(i => i.isFavorite).length;
-
-// Items logic from mock
-const pinnedItems = mockItems.filter(i => i.isPinned);
-const recentItems = [...mockItems].sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()).slice(0, 10);
-
 function StatCard({ title, value, icon: Icon, description }: { title: string, value: string | number, icon: any, description: string }) {
   return (
     <Card>
@@ -63,6 +51,9 @@ function StatCard({ title, value, icon: Icon, description }: { title: string, va
 export default async function DashboardPage() {
   const collectionStats = await getCollectionStats();
   const recentCollections = await getRecentCollections(6);
+  const itemStats = await getItemStats();
+  const pinnedItems = await getPinnedItems();
+  const recentItems = await getRecentItems(10);
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,7 +61,7 @@ export default async function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard 
           title="Total Items" 
-          value={totalItems} 
+          value={itemStats.total} 
           icon={FileBox} 
           description="Stored in your stash"
         />
@@ -82,7 +73,7 @@ export default async function DashboardPage() {
         />
         <StatCard 
           title="Favorite Items" 
-          value={favoriteItemsCount} 
+          value={itemStats.favorites} 
           icon={Star} 
           description="Quickly accessible items"
         />
@@ -105,26 +96,41 @@ export default async function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                {pinnedItems.map(item => (
-                  <Link href={`/items/${item.id}`} key={item.id}>
-                    <div className="flex flex-col gap-2 rounded-lg border p-4 hover:bg-muted/50 transition-colors h-full">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium truncate">{item.title}</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>
-                      <div className="flex items-center gap-2 mt-auto pt-2">
-                        {item.tags.slice(0, 2).map((tag, i) => (
-                          <Badge key={i} variant="secondary" className="text-[10px]">{tag}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-                {pinnedItems.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No pinned items yet.</p>
-                )}
-              </div>
+              {pinnedItems.length > 0 ? (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {pinnedItems.map(item => {
+                    const type = item.itemType;
+                    const TypeIcon = IconMap[type?.icon] || FileBox;
+                    return (
+                      <Link href={`/items/${item.id}`} key={item.id}>
+                        <div 
+                          className="flex flex-col gap-2 rounded-lg border p-4 hover:bg-muted/50 transition-colors h-full"
+                          style={{ borderLeftColor: type?.color, borderLeftWidth: '4px' }}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-medium truncate">{item.title}</span>
+                            <TypeIcon className="h-4 w-4 flex-shrink-0" style={{ color: type?.color }} />
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>
+                          <div className="flex items-center gap-2 mt-auto pt-2 overflow-hidden">
+                            {item.tags.slice(0, 2).map((tag, i) => (
+                              <Badge key={i} variant="secondary" className="text-[10px] truncate">{tag.name}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center border rounded-lg bg-muted/20 border-dashed">
+                  <Pin className="h-8 w-8 text-muted-foreground/50 mb-3" />
+                  <h3 className="text-sm font-medium">No pinned items</h3>
+                  <p className="text-xs text-muted-foreground mt-1 max-w-[200px]">
+                    Pin your most important items to access them quickly from the dashboard.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -138,12 +144,13 @@ export default async function DashboardPage() {
             <CardContent>
               <div className="flex flex-col gap-3 mt-4">
                 {recentItems.map(item => {
-                  const type = mockItemTypes.find(t => t.id === item.itemTypeId);
+                  const type = item.itemType;
+                  const TypeIcon = IconMap[type?.icon] || FileBox;
                   return (
                     <Link href={`/items/${item.id}`} key={item.id}>
                       <div className="flex items-center gap-4 rounded-lg border p-3 hover:bg-muted/50 transition-colors">
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                          <FileBox className="h-5 w-5" style={{ color: type?.color || '#ccc' }} />
+                          <TypeIcon className="h-5 w-5" style={{ color: type?.color || '#ccc' }} />
                         </div>
                         <div className="flex flex-1 flex-col overflow-hidden">
                           <span className="font-medium truncate text-sm">{item.title}</span>

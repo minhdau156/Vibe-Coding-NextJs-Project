@@ -52,6 +52,7 @@ async function main() {
     language?: string;
     itemTypeName: string;
     collectionId: string;
+    isPinned?: boolean;
   }) {
     const item = await prisma.item.create({
       data: {
@@ -61,6 +62,7 @@ async function main() {
         content: data.content,
         url: data.url,
         language: data.language,
+        isPinned: data.isPinned || false,
         itemTypeId: typeMap[data.itemTypeName],
         userId: user.id,
       },
@@ -94,6 +96,7 @@ async function main() {
     language: 'typescript',
     itemTypeName: 'snippet',
     collectionId: reactCollection.id,
+    isPinned: true,
   });
   await createItem({
     title: 'Context Provider Pattern',
@@ -244,6 +247,7 @@ async function main() {
     url: 'https://tailwindcss.com',
     itemTypeName: 'link',
     collectionId: designCollection.id,
+    isPinned: true,
   });
   await createItem({
     title: 'shadcn/ui',

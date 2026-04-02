@@ -1,7 +1,8 @@
 # Current Feature
 
 ## Status
-Complete
+
+Completed
 
 ## Goals
 
@@ -19,3 +20,4 @@ Complete
 - Dashboard UI Phase 3: Completed
 - Database Seeding: Completed
 - Dashboard Collections Data: Completed
+- Dashboard Items Data: Completed
