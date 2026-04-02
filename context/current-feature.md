@@ -21,3 +21,4 @@ Completed
 - Database Seeding: Completed
 - Dashboard Collections Data: Completed
 - Dashboard Items Data: Completed
+- Dashboard Stats & Sidebar: Completed

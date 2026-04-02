@@ -13,10 +13,13 @@ import {
   LogOut,
   Settings,
   MoreHorizontal,
-  LayoutDashboard
+  LayoutDashboard,
+  Star
 } from "lucide-react"
 
-import { mockUser, mockItemTypes, mockCollections } from "@/lib/mock-data"
+import { mockUser } from "@/lib/mock-data"
+import { getFavoriteCollections, getRecentCollections } from "@/lib/db/collections"
+import { getItemTypes } from "@/lib/db/items"
 import {
   Sidebar,
   SidebarContent,
@@ -53,11 +56,10 @@ const iconMap: Record<string, React.ElementType> = {
   Link: LinkIcon,
 }
 
-export function AppSidebar() {
-  const favoriteCollections = mockCollections.filter((c) => c.isFavorite)
-  const recentCollections = [...mockCollections]
-    .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
-    .slice(0, 5)
+export async function AppSidebar() {
+  const itemTypes = await getItemTypes()
+  const favoriteCollections = await getFavoriteCollections()
+  const recentCollections = await getRecentCollections(5)
 
   return (
     <Sidebar variant="inset" collapsible="icon">
@@ -82,7 +84,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Types</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mockItemTypes.map((type) => {
+              {itemTypes.map((type) => {
                 const Icon = iconMap[type.icon] || File
                 return (
                   <SidebarMenuItem key={type.id}>
@@ -105,7 +107,8 @@ export function AppSidebar() {
               {favoriteCollections.map((collection) => (
                 <SidebarMenuItem key={collection.id}>
                   <SidebarMenuButton tooltip={collection.name} render={<Link href={`/collections/${collection.id}`} />}>
-                    <span>{collection.name}</span>
+                    <Star className="mr-2 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="truncate">{collection.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -121,10 +124,16 @@ export function AppSidebar() {
               {recentCollections.map((collection) => (
                 <SidebarMenuItem key={collection.id}>
                   <SidebarMenuButton tooltip={collection.name} render={<Link href={`/collections/${collection.id}`} />}>
-                    <span>{collection.name}</span>
+                    <div className="h-3 w-3 rounded-full mr-2 shrink-0" style={{ backgroundColor: collection.dominantColor || "var(--border)" }} />
+                    <span className="truncate">{collection.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem className="mt-2">
+                <SidebarMenuButton render={<Link href="/collections" />}>
+                  <span className="text-muted-foreground text-sm font-medium">View all collections...</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -63,3 +63,11 @@ export async function getCollectionStats() {
     favorites,
   };
 }
+
+export async function getFavoriteCollections() {
+  const collections = await prisma.collection.findMany({
+    where: { isFavorite: true },
+    orderBy: { updatedAt: "desc" },
+  });
+  return collections;
+}

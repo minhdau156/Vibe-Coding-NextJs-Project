@@ -86,6 +86,7 @@ async function main() {
       description: 'Reusable React patterns and hooks',
       userId: user.id,
       defaultTypeId: typeMap['snippet'],
+      isFavorite: true,
     },
   });
   await createItem({
@@ -124,6 +125,7 @@ async function main() {
       description: 'AI prompts and workflow automations',
       userId: user.id,
       defaultTypeId: typeMap['prompt'],
+      isFavorite: true,
     },
   });
   await createItem({

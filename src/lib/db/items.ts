@@ -37,3 +37,10 @@ export async function getItemStats() {
     favorites,
   };
 }
+
+export async function getItemTypes() {
+  const types = await prisma.itemType.findMany({
+    orderBy: { name: 'asc' },
+  });
+  return types;
+}
