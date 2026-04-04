@@ -45,6 +45,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { SidebarUser } from "@/components/layout/sidebar-user"
+import { auth } from "@/auth"
 
 const iconMap: Record<string, React.ElementType> = {
   Code,
@@ -60,6 +62,7 @@ export async function AppSidebar() {
   const itemTypes = await getItemTypes()
   const favoriteCollections = await getFavoriteCollections()
   const recentCollections = await getRecentCollections(5)
+  const session = await auth()
 
   return (
     <Sidebar variant="inset" collapsible="icon">
@@ -141,58 +144,7 @@ export async function AppSidebar() {
 
       {/* User Avatar */}
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger render={
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                />
-              }>
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg">
-                    {mockUser.name.substring(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{mockUser.name}</span>
-                  <span className="truncate text-xs">{mockUser.email}</span>
-                </div>
-                <MoreHorizontal className="ml-auto size-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side="bottom"
-                align="end"
-                sideOffset={4}
-              >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg">
-                        {mockUser.name.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{mockUser.name}</span>
-                      <span className="truncate text-xs">{mockUser.email}</span>
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarUser user={{ name: session?.user?.name, email: session?.user?.email, image: session?.user?.image }} />
       </SidebarFooter>
     </Sidebar>
   )
