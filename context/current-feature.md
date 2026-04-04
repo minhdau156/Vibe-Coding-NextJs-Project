@@ -25,3 +25,4 @@ Not Started
 - Auth Setup - NextAuth + GitHub Provider: Completed
 - Auth Credentials - Email/Password Provider: Completed
 - Auth UI - Sign In, Register & Sign Out: Completed
+- Email Verification on Register: Completed
