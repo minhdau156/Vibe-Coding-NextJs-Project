@@ -5,6 +5,7 @@ import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import GitHub from "next-auth/providers/github";
+import { redirect } from "next/navigation";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -29,6 +30,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         if (!user || !user.password) {
           return null;
+        }
+
+        if (!user.emailVerified) {
+          throw new Error("Email not verified. Please check your inbox.");
         }
 
         const passwordsMatch = await bcrypt.compare(password, user.password);

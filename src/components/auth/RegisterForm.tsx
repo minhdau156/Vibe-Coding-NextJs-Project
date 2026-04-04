@@ -12,6 +12,7 @@ import { githubLoginAction } from "@/actions/auth";
 export function RegisterForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -42,15 +43,33 @@ export function RegisterForm() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to register");
+        throw new Error(data.message || "Failed to register");
       }
 
-      router.push("/sign-in");
+      setSuccess(true);
     } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (success) {
+    return (
+      <Card className="w-full max-w-md shadow-lg border-primary/10">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold tracking-tight text-center">Check your email</CardTitle>
+          <CardDescription className="text-center">
+            We sent a verification link to your email address. Please click the link to verify your account.
+          </CardDescription>
+        </CardHeader>
+        <CardFooter className="flex justify-center flex-col gap-4 mt-4">
+          <Link href="/sign-in" className="text-primary hover:underline font-medium">
+            Back to Sign in
+          </Link>
+        </CardFooter>
+      </Card>
+    );
   }
 
   return (
