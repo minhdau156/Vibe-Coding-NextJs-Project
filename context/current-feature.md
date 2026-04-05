@@ -6,11 +6,12 @@ Not Started
 
 ## Goals
 
-<!-- Add measurable goals here -->
+- 
 
 ## Notes
 
-<!-- Add technical notes, command lines, or other context here -->
+- 
+
 
 ## History
 
@@ -27,3 +28,4 @@ Not Started
 - Auth UI - Sign In, Register & Sign Out: Completed
 - Email Verification on Register: Completed
 - Items List View: Completed
+- Three Column Item Listing: Completed
