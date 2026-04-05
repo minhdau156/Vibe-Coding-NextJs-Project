@@ -14,7 +14,7 @@ export default function ItemsByTypeLoading() {
         <Skeleton className="h-5 w-72" /> {/* Description */}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <Card key={i} className="h-full flex flex-col justify-between">
             <CardHeader className="pb-2">
