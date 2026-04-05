@@ -1,4 +1,6 @@
-import Link from 'next/link';
+"use client";
+
+import { useItemDrawer } from "@/components/items/item-drawer-provider";
 import { Badge } from '@/components/ui/badge';
 import { 
   FileBox, 
@@ -36,30 +38,42 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item }: ItemCardProps) {
+  const { openItem } = useItemDrawer();
   const type = item.itemType;
   const TypeIcon = type && IconMap[type.icon] ? IconMap[type.icon] : FileBox;
   
   return (
-    <Link href={`/items/${item.id}`}>
-      <div 
-        className="flex flex-col gap-2 rounded-lg border bg-card text-card-foreground p-4 hover:bg-muted/50 transition-colors h-full shadow-sm hover:shadow"
-        style={{ borderLeftColor: type?.color || 'hsl(var(--primary))', borderLeftWidth: '4px' }}
-      >
-        <div className="flex items-center justify-between gap-2">
-          <span className="font-medium truncate">{item.title}</span>
-          <TypeIcon className="h-4 w-4 shrink-0" style={{ color: type?.color }} />
+    <button 
+      onClick={() => openItem(item.id)}
+      className="group relative flex flex-col gap-3 rounded-xl border border-border/50 bg-background p-4 text-left shadow-sm transition-all hover:bg-accent/5 hover:shadow-md hover:border-border/80"
+    >
+      <div className="flex w-full items-start gap-3">
+        <div 
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+          style={{ backgroundColor: `${type?.color || 'hsl(var(--primary))'}15`, color: type?.color || 'hsl(var(--primary))' }}
+        >
+          <TypeIcon className="h-5 w-5" />
         </div>
-        {item.description && (
-          <p className="text-xs text-muted-foreground line-clamp-2">{item.description}</p>
-        )}
-        <div className="flex items-center gap-2 mt-auto pt-2 overflow-hidden">
+        <div className="flex flex-col flex-1 gap-1 overflow-hidden mt-0.5">
+          <span className="font-semibold text-sm truncate text-foreground leading-none">{item.title}</span>
+          {item.description && (
+            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{item.description}</p>
+          )}
+        </div>
+      </div>
+      
+      {item.tags && item.tags.length > 0 && (
+        <div className="flex w-full flex-wrap items-center gap-1.5 mt-1 border-t border-border/40 pt-3">
           {item.tags.slice(0, 3).map((tag) => (
-            <Badge key={tag.id} variant="secondary" className="text-[10px] truncate">
+            <Badge key={tag.id} variant="secondary" className="text-[10px] font-medium px-1.5 py-0 rounded-md bg-secondary text-secondary-foreground">
               {tag.name}
             </Badge>
           ))}
+          {item.tags.length > 3 && (
+            <span className="text-[10px] text-muted-foreground ml-1">+{item.tags.length - 3}</span>
+          )}
         </div>
-      </div>
-    </Link>
+      )}
+    </button>
   );
 }

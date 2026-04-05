@@ -64,3 +64,20 @@ export async function getItemsByType(typeName: string) {
 
   return items;
 }
+
+export async function getItemById(id: string) {
+  const item = await prisma.item.findUnique({
+    where: { id },
+    include: {
+      itemType: true,
+      tags: true,
+      collections: {
+        include: {
+          collection: true
+        }
+      }
+    },
+  });
+
+  return item;
+}

@@ -24,6 +24,7 @@ import {
   Link as LinkIcon
 } from 'lucide-react';
 import Link from 'next/link';
+import { ItemDrawerTrigger } from '@/components/items/item-drawer-trigger';
 import { getRecentCollections, getCollectionStats } from '@/lib/db/collections';
 
 const IconMap: Record<string, any> = {
@@ -110,7 +111,7 @@ export default async function DashboardPage() {
                     const type = item.itemType;
                     const TypeIcon = IconMap[type?.icon] || FileBox;
                     return (
-                      <Link href={`/items/${item.id}`} key={item.id}>
+                      <ItemDrawerTrigger itemId={item.id} key={item.id}>
                         <div 
                           className="flex flex-col gap-2 rounded-lg border p-4 hover:bg-muted/50 transition-colors h-full"
                           style={{ borderLeftColor: type?.color, borderLeftWidth: '4px' }}
@@ -126,7 +127,7 @@ export default async function DashboardPage() {
                             ))}
                           </div>
                         </div>
-                      </Link>
+                      </ItemDrawerTrigger>
                     )
                   })}
                 </div>
@@ -155,7 +156,7 @@ export default async function DashboardPage() {
                   const type = item.itemType;
                   const TypeIcon = IconMap[type?.icon] || FileBox;
                   return (
-                    <Link href={`/items/${item.id}`} key={item.id}>
+                    <ItemDrawerTrigger itemId={item.id} key={item.id}>
                       <div 
                         className="flex items-center gap-4 rounded-lg border p-3 hover:bg-muted/50 transition-colors"
                         style={{ borderLeftColor: type?.color, borderLeftWidth: '4px' }}
@@ -171,7 +172,7 @@ export default async function DashboardPage() {
                           {item.updatedAt.toLocaleDateString()}
                         </div>
                       </div>
-                    </Link>
+                    </ItemDrawerTrigger>
                   );
                 })}
               </div>
