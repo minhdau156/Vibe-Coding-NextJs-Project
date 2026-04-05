@@ -59,10 +59,17 @@ const iconMap: Record<string, React.ElementType> = {
 }
 
 export async function AppSidebar() {
-  const itemTypes = await getItemTypes()
-  const favoriteCollections = await getFavoriteCollections()
-  const recentCollections = await getRecentCollections(5)
-  const session = await auth()
+  const [
+    itemTypes,
+    favoriteCollections,
+    recentCollections,
+    session
+  ] = await Promise.all([
+    getItemTypes(),
+    getFavoriteCollections(),
+    getRecentCollections(5),
+    auth()
+  ]);
 
   return (
     <Sidebar variant="inset" collapsible="icon">

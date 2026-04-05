@@ -49,11 +49,19 @@ function StatCard({ title, value, icon: Icon, description }: { title: string, va
 }
 
 export default async function DashboardPage() {
-  const collectionStats = await getCollectionStats();
-  const recentCollections = await getRecentCollections(6);
-  const itemStats = await getItemStats();
-  const pinnedItems = await getPinnedItems();
-  const recentItems = await getRecentItems(10);
+  const [
+    collectionStats,
+    recentCollections,
+    itemStats,
+    pinnedItems,
+    recentItems
+  ] = await Promise.all([
+    getCollectionStats(),
+    getRecentCollections(6),
+    getItemStats(),
+    getPinnedItems(),
+    getRecentItems(10)
+  ]);
 
   return (
     <div className="flex flex-col gap-6">

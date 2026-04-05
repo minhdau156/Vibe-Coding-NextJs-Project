@@ -1,9 +1,19 @@
-import React from "react";
-import { Search, Plus } from "lucide-react";
+import React, { Suspense } from "react";
+import { Search, Plus, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger, SidebarInset, Sidebar } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
+
+function SidebarSkeleton() {
+  return (
+    <Sidebar variant="inset" collapsible="icon">
+      <div className="flex h-full items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    </Sidebar>
+  );
+}
 
 export default function DashboardLayout({
   children,
@@ -12,7 +22,9 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <Suspense fallback={<SidebarSkeleton />}>
+        <AppSidebar />
+      </Suspense>
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 md:px-6">
           <SidebarTrigger className="-ml-1" />

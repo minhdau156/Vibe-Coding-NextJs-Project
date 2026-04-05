@@ -44,3 +44,23 @@ export async function getItemTypes() {
   });
   return types;
 }
+
+export async function getItemsByType(typeName: string) {
+  const items = await prisma.item.findMany({
+    where: {
+      itemType: {
+        name: {
+          equals: typeName,
+          mode: 'insensitive',
+        }
+      }
+    },
+    orderBy: { updatedAt: "desc" },
+    include: {
+      itemType: true,
+      tags: true,
+    },
+  });
+
+  return items;
+}
