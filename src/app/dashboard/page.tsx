@@ -148,7 +148,10 @@ export default async function DashboardPage() {
                   const TypeIcon = IconMap[type?.icon] || FileBox;
                   return (
                     <Link href={`/items/${item.id}`} key={item.id}>
-                      <div className="flex items-center gap-4 rounded-lg border p-3 hover:bg-muted/50 transition-colors">
+                      <div 
+                        className="flex items-center gap-4 rounded-lg border p-3 hover:bg-muted/50 transition-colors"
+                        style={{ borderLeftColor: type?.color, borderLeftWidth: '4px' }}
+                      >
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
                           <TypeIcon className="h-5 w-5" style={{ color: type?.color || '#ccc' }} />
                         </div>
